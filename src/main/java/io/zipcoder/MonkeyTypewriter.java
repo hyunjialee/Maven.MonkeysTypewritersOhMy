@@ -1,5 +1,7 @@
 package io.zipcoder;
 
+import java.util.NoSuchElementException;
+
 public class MonkeyTypewriter {
     public static void main(String[] args) {
         String introduction = "It was the best of times,\n" +
@@ -24,6 +26,40 @@ public class MonkeyTypewriter {
         // For each Copier(one safe and one unsafe), create and start 5 monkeys copying the introduction to
         // A Tale Of Two Cities.
 
+        UnsafeCopier unsafe = new UnsafeCopier(introduction);
+        Thread monkey1 = new Thread(unsafe, "monkey1");
+        Thread monkey2 = new Thread(unsafe, "monkey2");
+        Thread monkey3 = new Thread(unsafe, "monkey3");
+        Thread monkey4 = new Thread(unsafe, "monkey4");
+        Thread monkey5 = new Thread(unsafe, "monkey5");
+
+        try {
+            monkey1.start();
+            monkey2.start();
+            monkey3.start();
+            monkey4.start();
+            monkey5.start();
+
+        } catch (NoSuchElementException e) {
+            System.out.println("Monkeys stopped working");
+        }
+
+        SafeCopier safe = new SafeCopier(introduction);
+        Thread monkey6 = new Thread(safe, "monkey6");
+        Thread monkey7 = new Thread(safe, "monkey7");
+        Thread monkey8 = new Thread(safe, "monkey8");
+        Thread monkey9 = new Thread(safe, "monkey9");
+        Thread monkey10 = new Thread(safe, "monkey10");
+
+        try {
+            monkey6.start();
+            monkey7.start();
+            monkey8.start();
+            monkey9.start();
+            monkey10.start();
+        } catch (NoSuchElementException e) {
+        System.out.println("Monkeys stopped working");
+    }
 
         // This wait is here because main is still a thread and we want the main method to print the finished copies
         // after enough time has passed.
@@ -31,8 +67,12 @@ public class MonkeyTypewriter {
             Thread.sleep(1000);
         } catch(InterruptedException e) {
             System.out.println("MAIN INTERRUPTED");
+        } catch (NoSuchElementException e){
+            System.out.println("MONKEY STOP");
         }
 
         // Print out the copied versions here.
+        System.out.println("\nUnsafe: \n" + unsafe.copied);
+        System.out.println("\nSafe: \n" + safe.copied);
     }
 }
